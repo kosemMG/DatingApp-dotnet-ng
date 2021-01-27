@@ -9,7 +9,7 @@ import { User } from '../_models/user';
   providedIn: 'root'
 })
 export class AccountService {
-  public baseUrl = 'https://localhost:5001/api/';
+  public baseUrl = 'http://localhost:5000/api/';
 
   private currentUserSource = new ReplaySubject<User>(1);
   public currentUser$ = this.currentUserSource.asObservable();
