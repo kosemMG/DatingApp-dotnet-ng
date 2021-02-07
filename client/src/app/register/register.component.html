@@ -1,23 +1,48 @@
-<form #registerForm="ngForm" (ngSubmit)="register()" autocomplete="off">
+<form [formGroup]="registerForm" (ngSubmit)="registerForm.valid && register()" autocomplete="off">
   <h2 class="text-center text-primary">Sign up</h2>
   <hr>
   <div class="form-group">
-    <input [(ngModel)]="model.username"
-           class="form-control"
-           name="username"
-           placeholder="Username"
-           type="text">
+    <label class="control-label mr-3">I am a: </label>
+    <label for="male" class="radio-inline">
+      <input id="male" type="radio" value="male" formControlName="gender"> Male
+    </label>
+    <label for="female" class="radio-inline">
+      <input id="female" type="radio" value="female" formControlName="gender" class="ml-3"> Female
+    </label>
   </div>
+  <app-text-input [formControl]="registerForm.controls['username']" label="Username"></app-text-input>
+  <app-text-input [formControl]="registerForm.controls['knownAs']" label="Known as"></app-text-input>
 
   <div class="form-group">
-    <input [(ngModel)]="model.password"
-           class="form-control"
-           name="password"
-           placeholder="Password"
-           type="password">
+    <div class="input-group">
+      <input #datePicker="ngbDatepicker"
+             [maxDate]="maxDate"
+             [minDate]="minDate"
+             class="form-control"
+             formControlName="dateOfBirth"
+             ngbDatepicker
+             placeholder="Date of Birth">
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary calendar" (click)="datePicker.toggle()" type="button"></button>
+      </div>
+    </div>
   </div>
+
+  <app-text-input [formControl]="registerForm.controls['city']" label="City"></app-text-input>
+  <app-text-input [formControl]="registerForm.controls['country']" label="Country"></app-text-input>
+  <app-text-input [formControl]="registerForm.controls['password']" label="Password" type="password"></app-text-input>
+  <app-text-input [formControl]="registerForm.controls['confirmPassword']" label="Confirm password" type="password"></app-text-input>
+
+  <div class="row" *ngIf="validationErrors.length">
+    <ul class="text-danger">
+      <li *ngFor="let error of validationErrors">
+        {{ error }}
+      </li>
+    </ul>
+  </div>
+
   <div class="form-group text-center">
-    <button class="btn btn-success mr-2" type="submit">Register</button>
+    <button [disabled]="registerForm.invalid" class="btn btn-success mr-2" type="submit">Register</button>
     <button (click)="cancel()" class="btn btn-default mr-2" type="button">Cancel</button>
   </div>
 </form>

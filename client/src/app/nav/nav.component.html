@@ -19,7 +19,7 @@
     </ul>
 
     <div *ngIf="(currentUser$ | async) as user" class="dropdown" ngbDropdown>
-      <img [src]="user.photoUrl" [alt]="user.username" class="avatar-img mr-2">
+      <img [src]="user.photoUrl || './assets/user.png'" [alt]="user.username" class="avatar-img mr-2">
       <a class="dropdown-toggle text-light" ngbDropdownToggle>Welcome {{ user.username | titlecase }}</a>
       <div class="dropdown-menu mt-3" ngbDropdownMenu>
         <a routerLink='/member/edit' class="dropdown-item" ngbDropdownItem>Edit Profile</a>
