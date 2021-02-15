@@ -88,6 +88,16 @@ export class MembersService {
     return this.http.delete<void>(`${ this.baseUrl }users/delete-photo/${ photoId }`);
   }
 
+  public addLike(username: string): Observable<void> {
+    return this.http.post<void>(`${ this.baseUrl }likes/${ username }`, {});
+  }
+
+  public getLikes(predicate: string, pageNumber: number, pageSize: number): Observable<PaginatedResult<Partial<Members>>> {
+    let params = this.getPaginationHeaders(pageNumber, pageSize);
+    params = params.append('predicate', predicate);
+    return this.getPaginatedResult<Partial<Members>>(this.baseUrl + 'likes', params);
+  }
+
   private getPaginatedResult<T>(url: string, params: HttpParams): Observable<PaginatedResult<T>> {
     const paginatedResult = new PaginatedResult<T>();
     return this.http.get<T>(url, { observe: 'response', params }).pipe(
