@@ -1,0 +1,15 @@
+table {
+  cursor: pointer;
+}
+
+th {
+  width: 20%;
+}
+
+tr td:first-child {
+  width: 40%;
+}
+
+.img-circle {
+  max-width: 25%;
+}
