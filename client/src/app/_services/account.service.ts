@@ -6,6 +6,15 @@ import { environment } from '../../environments/environment';
 
 import { User } from '../_models/user';
 
+type TokenPayload = {
+  nameid: number,
+  unique_name: string,
+  role: string | string[],
+  nbf: number,
+  exp: number,
+  iat: number
+};
+
 @Injectable({
   providedIn: 'root'
 })
@@ -18,9 +27,15 @@ export class AccountService {
   constructor(private http: HttpClient) {
   }
 
+  private static getDecodedToken(token: string): TokenPayload {
+    const payload = token.split('.')[1];
+    return JSON.parse(atob(payload));
+  }
+
   public login(model: any): Observable<void> {
     return this.http.post<User>(this.baseUrl + 'account/login', model).pipe(
       map((user: User) => {
+        console.log(user);
         if (user) {
           this.setCurrentUser(user);
         }
@@ -37,13 +52,16 @@ export class AccountService {
     return this.http.post<User>(this.baseUrl + 'account/register', model).pipe(
       map((user: User) => {
         if (user) {
-         this.setCurrentUser(user);
+          this.setCurrentUser(user);
         }
       })
     );
   }
 
   public setCurrentUser(user: User): void {
+    user.roles = [];
+    const roles = AccountService.getDecodedToken(user.token).role;
+    Array.isArray(roles) ? user.roles = roles : user.roles.push(roles);
     localStorage.setItem('user', JSON.stringify(user));
     this.currentUserSource.next(user);
   }
