@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using API.DTOs;
 using API.Entities;
@@ -36,6 +37,8 @@ namespace API.Helpers
                         src => src.Recipient.Photos.FirstOrDefault(photo => photo.IsMain).Url
                     )
                 );
+            CreateMap<DateTime, DateTime>()
+                .ConvertUsing(date => DateTime.SpecifyKind(date, DateTimeKind.Utc));
         }
     }
 }

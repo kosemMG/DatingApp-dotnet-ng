@@ -15,14 +15,11 @@ export class MemberMessagesComponent {
 
   public messageContent: string;
 
-  constructor(private messageService: MessageService) {
+  constructor(public messageService: MessageService) {
   }
 
   public sendMessage(): void {
     this.messageService.sendMessage(this.username, this.messageContent)
-      .subscribe(message => {
-        this.messages.push(message);
-        this.messageForm.reset();
-      });
+      .then(() => this.messageForm.reset());
   }
 }

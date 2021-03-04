@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
 import { User } from '../_models/user';
+import { PresenceService } from './presence.service';
 
 type TokenPayload = {
   nameid: number,
@@ -24,7 +25,7 @@ export class AccountService {
   private currentUserSource = new ReplaySubject<User>(1);
   public currentUser$ = this.currentUserSource.asObservable();
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private presence: PresenceService) {
   }
 
   private static getDecodedToken(token: string): TokenPayload {
@@ -38,6 +39,7 @@ export class AccountService {
         console.log(user);
         if (user) {
           this.setCurrentUser(user);
+          this.presence.createHubConnection(user);
         }
       })
     );
@@ -46,6 +48,7 @@ export class AccountService {
   public logout(): void {
     localStorage.removeItem('user');
     this.currentUserSource.next(null);
+    this.presence.stopHubConnection();
   }
 
   public register(model): Observable<void> {
@@ -53,6 +56,7 @@ export class AccountService {
       map((user: User) => {
         if (user) {
           this.setCurrentUser(user);
+          this.presence.createHubConnection(user);
         }
       })
     );
